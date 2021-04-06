@@ -217,3 +217,22 @@ def move_down_left(i, j):
 def move_down_right(i, j):
     if obs_map[i + 1, j + 1] != 1:
         return (i + 1, j + 1)
+
+# Defining a function to generate new legal moves as per the state
+
+def generate_new_moves(state):
+    list_states = []
+    for func in [move_left, move_right, move_down, move_up]:
+        cost = state.cost + 1
+        dum_state = state.data
+        out_state = func(dum_state[0], dum_state[1])
+        if out_state is not None:
+            list_states.append((out_state, cost))
+    for func in [move_up_left, move_up_right, move_down_left,
+                 move_down_right]:
+        cost = state.cost + 1.414
+        dum_state = state.data
+        out_state = func(dum_state[0], dum_state[1])
+        if out_state is not None:
+            list_states.append((out_state, cost))
+    return list_states
