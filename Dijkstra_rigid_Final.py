@@ -94,3 +94,126 @@ class Node:
     def __repr__(self):
     def __repr__(self):
         return str(self.data)
+
+# Creating a function to define the circle obstacle's area on the map
+
+def getCircleObstacle(i, j):
+    global cl
+    cond = ((j - 90) ** 2) + ((i - 70) ** 2) <= ((35 + cl) ** 2)
+    return cond
+
+# Creating a function to define the C shape obstacle's area on the map
+
+def getCShapeObstacle(i, j):
+    global cl
+    cond1 = i <= 270 - cl
+    cond2 = i <= 280 + cl
+    cond3 = j >= 200 - cl
+    cond4 = j >= 210 + cl
+    cond5 = i >= 240 + cl
+    cond6 = i >= 230 - cl
+    cond7 = j <= 230 + cl
+    ret_val = ((cond2 and cond3 and cond6 and cond7) and not (cond1 and cond4 and cond5 and cond7))
+    return ret_val
+
+# Creating a function to define the slanted rectangle obstacle's area on the map
+
+def getSlantedRectObstacle(i, j):
+    global cl
+    s1 = 0.7
+    s2 = -1.42814
+    x1 = np.arctan(s1)
+    x2 = np.arctan(s2)
+    d1 = np.cos(np.pi - x1)
+    d2 = np.cos(np.pi - x2)
+    a = -(cl / d1)
+    b = -(cl / d2)
+    cond1 = (i) + (1.42814 * j) >= (176.5511 - b)
+    cond2 = (i) - (0.7 * j) >= (74.39 - a)
+    cond3 = (i) + (1.42814 * j) <= (428.06815 + b)
+    cond4 = (i) - (0.7 * j) <= (98.80545 + a)
+    ret_val = (cond1 and cond2 and cond3 and cond4)
+    return ret_val
+
+# Creating a function to define the ellipse obstacle's area on the map
+
+def getEllipseObstacle(i, j):
+    global cl
+    cond = (((j - 246) / (60 + cl)) ** 2) + (((i - 145) / (30 + cl)) ** 2) <= 1
+    return cond
+
+
+def getBorderClearance(i, j):
+    global cl
+    cond1 = j >= 402 - cl
+    cond2 = j <= cl
+    cond3 = i >= 302 - cl
+    cond4 = i <= cl
+    ret_val = cond1 or cond2 or cond3 or cond4
+    return ret_val
+
+# Creating an if-condition to change value of the element in area under all obstacles to '1' in order to create a void in the map
+
+for i in range(obs_map.shape[0]):
+    for j in range(obs_map.shape[1]):
+        if getCircleObstacle(obs_map.shape[0] - i, j) or getCShapeObstacle(obs_map.shape[0] - i,
+                                                                           j) or getSlantedRectObstacle(
+            obs_map.shape[0] - i, j) or getEllipseObstacle(obs_map.shape[0] - i, j) or getBorderClearance(
+            obs_map.shape[0] - i, j):
+            obs_map[i, j] = 1
+
+# Defining the move functions
+# Defining the move up function where if the element above does not have '1' value, i.e. if there isn't a void in the element above, the object moves up
+
+def move_up(i, j):
+    if obs_map[i - 1, j] != 1:
+        return (i - 1, j)
+
+
+# Defining the move down function where if the element below does not have '1' value, i.e. if there isn't a void in the element below, the object moves down
+
+def move_down(i, j):
+    if obs_map[i + 1, j] != 1:
+        return (i + 1, j)
+
+
+# Defining the move left function where if the element on the left does not have '1' value, i.e. if there isn't a void in the element on the left, the object moves left
+
+def move_left(i, j):
+    if obs_map[i, j - 1] != 1:
+        return (i, j - 1)
+
+
+# Defining the move right function where if the element on the right does not have '1' value, i.e. if there isn't a void in the element on the right, the object moves right
+
+def move_right(i, j):
+    if obs_map[i, j + 1] != 1:
+        return (i, j + 1)
+
+
+# Defining the move up left function where if the element above and left does not have '1' value, i.e. if there isn't a void in the element above and left , the object moves up left
+
+def move_up_left(i, j):
+    if obs_map[i - 1, j - 1] != 1:
+        return (i - 1, j - 1)
+
+
+# Defining the move up right function where if the element above and right does not have '1' value, i.e. if there isn't a void in the element above and right, the object moves up right
+
+def move_up_right(i, j):
+    if obs_map[i - 1, j + 1] != 1:
+        return (i - 1, j + 1)
+
+
+# Defining the move down left function where if the element below and left does not have '1' value, i.e. if there isn't a void in the element below and left, the object moves down left
+
+def move_down_left(i, j):
+    if obs_map[i + 1, j - 1] != 1:
+        return (i + 1, j - 1)
+
+
+# Defining the move down right function where if the element below and right does not have '1' value, i.e. if there isn't a void in the element below and right, the object moves down right
+
+def move_down_right(i, j):
+    if obs_map[i + 1, j + 1] != 1:
+        return (i + 1, j + 1)
