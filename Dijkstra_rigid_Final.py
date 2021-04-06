@@ -1,8 +1,21 @@
 import numpy as np
 import cv2
 
-radius = 10
-clearance = 5
+try:
+    radius = int(input('Enter radius of the robot: '))
+    if radius < 0:
+        print("Invalid radius, setting radius to 0")
+        radius = 0
+
+    clearance = int(input('Enter clearance: '))
+    if clearance < 0:
+        print("Invalid clearance, setting clearance to 0")
+        clearance = 0
+
+except:
+    print("Error: Invalid Input. Exiting program")
+    exit(3)
+
 cl = radius + clearance
 
 # Map creation with edges as '1' in order to provide a void border of the map
@@ -12,6 +25,7 @@ obs_map[0, :] = 1
 obs_map[301, :] = 1
 obs_map[:, 0] = 1
 obs_map[:, 401] = 1
+
 
 class Queue:
 
@@ -30,6 +44,7 @@ class Queue:
 
     def __len__(self):
         return len(self.queue)
+
 
 # Creating a class to determine the node of the iteration. Node is the puzzle state.
 
@@ -92,8 +107,8 @@ class Node:
     # Defining the __repr__ function
 
     def __repr__(self):
-    def __repr__(self):
         return str(self.data)
+
 
 # Creating a function to define the circle obstacle's area on the map
 
@@ -151,6 +166,7 @@ def getBorderClearance(i, j):
     cond4 = i <= cl
     ret_val = cond1 or cond2 or cond3 or cond4
     return ret_val
+
 
 # Creating an if-condition to change value of the element in area under all obstacles to '1' in order to create a void in the map
 
@@ -218,6 +234,7 @@ def move_down_right(i, j):
     if obs_map[i + 1, j + 1] != 1:
         return (i + 1, j + 1)
 
+
 # Defining a function to generate new legal moves as per the state
 
 def generate_new_moves(state):
@@ -236,6 +253,7 @@ def generate_new_moves(state):
         if out_state is not None:
             list_states.append((out_state, cost))
     return list_states
+
 
 # Inputting values from the user and checking if the values are valid by checking the outbound values and in-obstacle values
 
@@ -342,3 +360,24 @@ while cur_node is not None:
 # Traceback the path
 
 path.reverse()
+
+# Converting the data in path array to BGR values
+
+for item in path:
+    result_map[item.data[0], item.data[1], :] = np.asarray((0, 255, 255))
+    result_map[result_map.shape[0] - start_node_y, start_node_x, :] = np.asarray((0, 0, 255))
+    result_map[result_map.shape[0] - goal_node_y, goal_node_x, :] = np.asarray((0, 255, 0))
+
+    for _ in range(int(FPS_val / 20)):
+        video_save.write(result_map)
+
+# Writing and saving the complete traverse
+
+video_save.write(result_map)
+
+video_save and video_save.release()
+cv2.imshow("Path", result_map)
+if cv2.waitKey(0) and 0XFF == ord('q'):
+    exit(0)
+
+cv2.destroyAllWindows()
