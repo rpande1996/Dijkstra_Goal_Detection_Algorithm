@@ -303,3 +303,42 @@ FPS_val = 240
 
 video_save = cv2.VideoWriter("Path-detection-3s.mp4", cv2.VideoWriter_fourcc(*'mp4v'), FPS_val, (width, height))
 
+# While loop to iterate the values inside the array with legal moves.
+# If the current state is same as the goal state then the loop breaks.
+# If the state ID is found in the visited list, then the node is skipped
+
+while True:
+    try:
+        cur_node = state_queue.pop()
+    except:
+        if len([node for node in state_queue.queue]) == 0:
+            break
+    if np.all(cur_node.data == goal_state):
+        break
+    if cur_node.id in visited:
+        continue
+    moves = generate_new_moves(cur_node)
+    for move in moves:
+        new_node = Node(move[0], cur_node, None, move[1])
+        state_queue.add(new_node)
+    visited.append(cur_node.id)
+
+    result_map[cur_node.data[0], cur_node.data[1], :] = np.asarray((255, 0, 0))
+
+    result_map[result_map.shape[0] - start_node_y, start_node_x, :] = np.asarray((0, 0, 255))
+    result_map[result_map.shape[0] - goal_node_y, goal_node_x, :] = np.asarray((0, 255, 0))
+
+    video_save.write(result_map)
+
+target_node = cur_node
+path = []
+
+# While loop to add a step in the path
+
+while cur_node is not None:
+    path.append(cur_node)
+    cur_node = cur_node.parent
+
+# Traceback the path
+
+path.reverse()
