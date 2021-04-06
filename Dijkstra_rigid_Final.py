@@ -282,3 +282,24 @@ try:
 except:
     print("Error: Invalid Input. Exiting program")
     exit(2)
+
+# Creating the goal state and initial state.
+
+goal_state = (obs_map.shape[0] - goal_node_y, goal_node_x)
+init_state = (obs_map.shape[0] - start_node_y, start_node_x)
+state_queue = Queue()
+state_queue.add(Node(init_state, None, None, 0))
+
+visited = []
+
+# Creating a new array in order to write as video
+
+result_map = obs_map.copy()
+result_map = result_map * 255
+result_map = np.dstack((result_map, result_map, result_map))
+result_map = result_map.astype(np.uint8)
+height, width = obs_map.shape
+FPS_val = 240
+
+video_save = cv2.VideoWriter("Path-detection-3s.mp4", cv2.VideoWriter_fourcc(*'mp4v'), FPS_val, (width, height))
+
