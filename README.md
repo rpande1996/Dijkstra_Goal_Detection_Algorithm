@@ -1,3 +1,7 @@
+Assignment done by:
+Rajan Pande: rpande@umd.edu
+Abhilash Mane: amane@umd.edu
+
 ## How to run the code
 
 Steps:
@@ -11,4 +15,3 @@ Steps:
 7. The animated visualization is saved as a video
 8. The video will be saved in the same folder as the code
 9. PyCharm IDE is recommended
-
