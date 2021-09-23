@@ -14,4 +14,13 @@ Steps:
 6. Please make sure that the points do not come in either border space or obstacle space
 7. The animated visualization is saved as a video
 8. The video will be saved in the same folder as the code
-9. PyCharm IDE is recommended
+
+# Libraries installed
+
+1. Numpy
+2. OpenCV
+
+# Software Recommended
+
+1. PyCharm as IDE
+2. Python 3.7
